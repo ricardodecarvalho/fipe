@@ -1,4 +1,6 @@
 import { useState } from 'react'
+
+import Fipe from './Fipe'
 import './App.css'
 
 const initialState = {
@@ -10,11 +12,12 @@ const initialState = {
   modelos: [],
   modelo: '',
   anos: [],
-  valor: {}
+  result: {}
 }
 
+const apiUrl = 'https://parallelum.com.br/fipe/api/v1'
+
 const fetchData = async ({ endpoint }) => {
-  const apiUrl = 'https://parallelum.com.br/fipe/api/v1'
   const response = await fetch(`${apiUrl}/${endpoint}`, {
     'Content-Type': 'application/json'
   })
@@ -30,7 +33,7 @@ const fetchData = async ({ endpoint }) => {
 
 function App () {
   const [
-    { isFetching, error, tipo, marcas, marca, modelos, modelo, anos, valor },
+    { isFetching, error, tipo, marcas, marca, modelos, modelo, anos, result },
     setState
   ] = useState(initialState)
 
@@ -52,7 +55,7 @@ function App () {
     })
   }
 
-  const getValor = (value) => {
+  const getResult = (value) => {
     return fetchData({
       endpoint: `${tipo}/marcas/${marca}/modelos/${modelo}/anos/${value}`
     })
@@ -103,7 +106,7 @@ function App () {
         modelos: [],
         modelo: '',
         anos: [],
-        valor: {}
+        result: {}
       }))
       return false
     }
@@ -143,7 +146,7 @@ function App () {
         modelos: [],
         modelo: '',
         anos: [],
-        valor: {}
+        result: {}
       }))
       return false
     }
@@ -181,7 +184,7 @@ function App () {
         isFetching: false,
         error: '',
         anos: [],
-        valor: {}
+        result: {}
       }))
       return false
     }
@@ -192,12 +195,12 @@ function App () {
       error: ''
     }))
 
-    getValor(value)
+    getResult(value)
       .then((response) => {
         setState((state) => ({
           ...state,
           isFetching: false,
-          valor: response
+          result: response
         }))
       })
       .catch((error) => {
@@ -210,56 +213,54 @@ function App () {
   }
 
   return (
-    <div className='App'>
-      <header className='App-header'>
-        {isFetching && <p>Loading...</p>}
-
-        {error && <p>{error}</p>}
-
-        <select name='tipo' onChange={handleTipos}>
-          <option value=''>Selecione</option>
-          <option value='carros'>Carros</option>
-          <option value='motos'>Motos</option>
-          <option value='caminhoes'>Caminhões</option>
-        </select>
-
-        {marcas.length > 0 && (
-          <select name='marca' onChange={handleMarcas}>
-            <option value=''>Marcas</option>
-            {marcas.map(({ nome, codigo }) => (
-              <option key={codigo} value={codigo}>
-                {nome}
-              </option>
-            ))}
-          </select>
-        )}
-
-        {modelos.length > 0 && (
-          <select name='modelo' onChange={handleModelos}>
-            <option value=''>Modelos</option>
-            {modelos.map(({ nome, codigo }) => (
-              <option key={codigo} value={codigo}>
-                {nome}
-              </option>
-            ))}
-          </select>
-        )}
-
-        {anos.length > 0 && (
-          <select name='ano' onChange={handleAnos}>
-            <option value=''>Anos</option>
-            {anos.map(({ nome, codigo }) => (
-              <option key={codigo} value={codigo}>
-                {nome}
-              </option>
-            ))}
-          </select>
-        )}
-
-        {Object.keys(valor).length > 0 && (
-          <code>{JSON.stringify(valor, null, 4)}</code>
-        )}
-      </header>
+    <div className='container-full mt-3'>
+      <div className='row'>
+        <div className='col-md-6 col-xs-12 mx-auto'>
+          <div className='card'>
+            <h5 className='card-header'>Tabela Fipe</h5>
+            <div className='card-body'>
+              <h5 className='card-title'>Preço médio de veículos</h5>
+              <p className='card-text'>
+                Formulário simples para consulta de preço médio de veículos.
+              </p>
+              <p className='card-text'>
+                Este não é um canal oficial de indice e indicadores, também não
+                temos nenhuma relação com{' '}
+                <a
+                  target='_blank'
+                  rel='noreferrer'
+                  href='https://veiculos.fipe.org.br/'
+                >
+                  https://veiculos.fipe.org.br/
+                </a>
+                .
+              </p>
+              <p className='card-text'>
+                Utilizamos a api{' '}
+                <a
+                  target='_blank'
+                  rel='noreferrer'
+                  href='https://parallelum.com.br/fipe/'
+                >
+                  https://parallelum.com.br/fipe/
+                </a>
+              </p>
+              <Fipe
+                isFetching={isFetching}
+                error={error}
+                handleTipos={handleTipos}
+                marcas={marcas}
+                handleMarcas={handleMarcas}
+                modelos={modelos}
+                handleModelos={handleModelos}
+                anos={anos}
+                handleAnos={handleAnos}
+                result={result}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
