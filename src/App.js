@@ -5,7 +5,6 @@ import './App.css'
 
 /*
 todo:
-- change title e meta tags
 - dark mode
 */
 
