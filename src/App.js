@@ -3,6 +3,12 @@ import { useState } from 'react'
 import Fipe from './Fipe'
 import './App.css'
 
+/*
+todo:
+- change title e meta tags
+- dark mode
+*/
+
 const initialState = {
   isFetching: false,
   error: '',
@@ -73,7 +79,13 @@ function App () {
       ...state,
       [name]: value,
       isFetching: true,
-      error: ''
+      error: '',
+      marcas: [],
+      marca: '',
+      modelos: [],
+      modelo: '',
+      anos: [],
+      result: {}
     }))
 
     getMarcas(value)
@@ -115,7 +127,11 @@ function App () {
       ...state,
       [name]: value,
       isFetching: true,
-      error: ''
+      error: '',
+      modelos: [],
+      modelo: '',
+      anos: [],
+      result: {}
     }))
 
     getModelos(value)
@@ -155,7 +171,9 @@ function App () {
       ...state,
       [name]: value,
       isFetching: true,
-      error: ''
+      error: '',
+      anos: [],
+      result: {}
     }))
 
     getAnos(value)
@@ -183,7 +201,6 @@ function App () {
         ...state,
         isFetching: false,
         error: '',
-        anos: [],
         result: {}
       }))
       return false
